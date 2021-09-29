@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bridge.SC</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=no" />
+	<meta name="format-detection" content="telephone=no" />
+	<link rel="icon" href="img/favicon.svg"/>
+	<link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="css/index.css" />
+</head>
+
+<body>
+	<div class="div_full">
+		<div class="div_title">Bridge of Super Chain</div>
+		<div class="div_tabs">
+		</div>
+		<div class="div_main">
+			<div class="div_content">
+				<label>Swap</label>
+				<div class="div_item">
+					<div class="div_item_title">From</div>
+					
+					<div class="div_item_coin">
+						<div>
+							<div class="div_from_btn">
+								<img id="img_from"/>
+								<img id="img_from_chain" class="min-img">
+							</div>
+						</div>
+						<input id="input_from_amount" type="text" inputmode="decimal" placeholder="0.0"/>
+					</div>
+					
+					<div class="div_item_address">
+						<input id="input_from_addr" type="text" placeholder="from address" />
+					</div>
+				</div>
+				
+				<div class="div_exchange">
+					<span>
+						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 489.389 489.389" xml:space="preserve">
+							<g>
+								<g>
+									<path d="M261.294,326.102c-8.3-7.3-21.8-6.2-29.1,2.1l-77,86.8v-346.9c0-11.4-9.4-20.8-20.8-20.8s-20.8,9.4-20.8,20.8v346.9 l-77-86.8c-8.3-8.3-20.8-9.4-29.1-2.1c-8.3,8.3-9.4,20.8-2.1,29.1l113.4,126.9c8.5,10.5,23.5,8.9,30.2,0l114.4-126.9 C270.694,347.002,269.694,333.402,261.294,326.102z"></path>
+	            					<path d="M483.994,134.702l-112.4-126.9c-10-10.1-22.5-10.7-31.2,0l-114.4,126.9c-7.3,8.3-6.2,21.8,2.1,29.1 c12.8,10.2,25.7,3.2,29.1-2.1l77-86.8v345.9c0,11.4,9.4,20.8,20.8,20.8s20.8-8.3,20.8-19.8v-346.8l77,86.8 c8.3,8.3,20.8,9.4,29.1,2.1C490.194,155.502,491.294,143.002,483.994,134.702z"></path>
+	        					</g>
+	        				</g>
+						</svg>
+					</span>
+				</div>
+				
+				<div class="div_item">
+					<div class="div_item_title">To</div>
+					
+					<div class="div_item_coin">
+						<div>
+							<div class="div_to_btn">
+								<img id="img_to"/>
+								<img id="img_to_chain" class="min-img">
+							</div>
+						</div>
+						<input id="input_to_amount" type="text" disabled="disabled" inputmode="decimal" placeholder="0.0"/>
+					</div>
+					
+					<div class="div_item_address">
+						<input id="input_to_addr" type="text" placeholder="to address" />
+					</div>
+				</div>
+				
+				<button class="btn_submit">Swap</button>
+			</div>
+			
+			<div class="div_footer">
+				<div>
+					<div class="left">Fee</div>
+					<div class="right">0%</div>
+				</div>
+				<div>
+					<div class="left">Estimated processing time</div>
+					<div class="right">~10 minutes</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<textarea id="from_select_template" style="display:none;">
+		{#foreach $T.coins as coin}
+			<div coin="{$T.coin}" class="div_select_item {#if $T.coin == $T.swapCoin}div_select_item_selected{#/if}">
+				<img src="img/coin/{$T.coin}.png"/>
+				{#if $T.coin != $T.fromChain.coin}
+					<img src="img/coin/{$T.fromChain.coin}.png" class="min-img"/>
+				{#/if}
+				<div>
+					<div>{$T.coin}</div>
+					{#if $T.coin != $T.fromChain.coin}
+						<div class="chain">{$T.fromChain.chain}</div>
+					{#else}
+						<div class="chain">Native</div>
+					{#/if}
+				</div>
+			</div>
+		{#/for}
+	</textarea>
+	<textarea id="to_select_template" style="display:none;">
+		{#foreach $T.chains as chain}
+			{#if $T.chain.coin != $T.fromChain.coin && $T.chain.coins[$T.swapCoin] != null}
+				<div coin="{$T.chain.coin}" class="div_select_item {#if $T.chain.coin == $T.toChain.coin}div_select_item_selected{#/if}">
+					<img src="img/coin/{$T.swapCoin}.png"/>
+					{#if $T.chain.coin != $T.swapCoin}
+						<img src="img/coin/{$T.chain.coin}.png" class="min-img"/>
+					{#/if}
+					<div>
+						<div>{$T.swapCoin}</div>
+						{#if $T.chain.coin != $T.swapCoin}
+							<div class="chain">{$T.chain.chain}</div>
+						{#else}
+							<div class="chain">Native</div>
+						{#/if}
+					</div>
+				</div>
+			{#/if}
+		{#/for}
+	</textarea>
+	<textarea id="qrcode_window_template" style="display:none;">
+		<div class="div_qrcode_img">
+			<div id="address_qr"></div>
+		</div>
+		<div class="div_qrcode_text">
+			<input id="input_paymentAddr" type="text" />
+		</div>
+		<div class="div_qrcode_copy">
+			<button data-clipboard-target="#input_paymentAddr" class="btn_copy">Copy</button>
+		</div>
+	</textarea>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.3.4/dist/web3.min.js"></script>
+	<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery-jtemplates.js"></script>
+	<script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript" src="js/clipboard.min.js" ></script>
+	<script type="text/javascript" src="js/base.js" ></script>
+	<script type="text/javascript" src="js/config.js" ></script>
+	<script type="text/javascript" src="js/server.js" ></script>
+	<script type="text/javascript" src="js/chain.js" ></script>
+	<script type="text/javascript">
+		$(function () {
+			// init
+			$.init = function() {
+				$("#img_from").attr("src", $.logo($.config.swapCoin));
+				if ($.config.swapCoin == $.config.fromChain.coin) {
+					$("#img_from_chain").hide();
+				} else {
+					$("#img_from_chain").show();
+					$("#img_from_chain").attr("src", $.logo($.config.fromChain.coin));
+				}
+				$("#img_to").attr("src", $.logo($.config.swapCoin));
+				if ($.config.swapCoin == $.config.toChain.coin) {
+					$("#img_to_chain").hide();
+				} else {
+					$("#img_to_chain").show();
+					$("#img_to_chain").attr("src", $.logo($.config.toChain.coin));
+				}
+			};
+			$.init();
+			
+			// input event
+			var rate = 1;
+			$("#input_from_amount").on('input', function(){
+				$("#input_to_amount").val($(this).val() * rate);
+			});
+			$.inputFromAddrChange = function() {
+				if ($.config.fromChain.chainId > 0 && $.config.toChain.chainId > 0) {
+					$("#input_to_addr").val($(this).val());
+					$("#input_to_addr").attr("disabled", "disabled");
+				}
+			};
+			$("#input_from_addr").on('input', $.inputFromAddrChange);
+			$("#input_from_addr").on('change', $.inputFromAddrChange);
+			
+			// click event
+			$(".div_from_btn").on('click', function(){
+				$.showPopup("Swap from ...", function(content) {
+					content.setTemplateElement("from_select_template");
+					content.processTemplate($.config);
+					content.find(".div_select_item").each(function(){
+						var that = $(this);
+						that.on('click', function(){
+							for (var coin of $.config.coins) {
+								if (coin == that.attr("coin")) {
+									$.config.swapCoin = coin;
+									$.init();
+									$.hidePopup();
+									break;
+								}	
+							}
+						});
+					});
+				});
+			});
+			$(".div_to_btn").on('click', function(){
+				$.showPopup("Swap to ...", function(content) {
+					content.setTemplateElement("to_select_template");
+					content.processTemplate($.config);
+					content.find(".div_select_item").each(function(){
+						var that = $(this);
+						that.on('click', function(){
+							for (var chain of $.config.chains) {
+								if (chain.coin == that.attr("coin")) {
+									$.config.toChain = chain;
+									$.init();
+									if ($.config.toChain.chainId <= 0) {
+										$("#input_to_addr").val("");
+										$("#input_to_addr").removeAttr("disabled");
+									} else if ($.config.fromChain.chainId > 0) {
+										$("#input_to_addr").val($("#input_from_addr").val());
+										$("#input_to_addr").attr("disabled", "disabled");
+									}
+									$.hidePopup();
+									break;
+								}
+							}
+						});
+					});
+				});
+			});
+			
+		});
+	</script>
+</body>
+</html>
