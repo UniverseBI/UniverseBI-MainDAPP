@@ -1,0 +1,82 @@
+@charset "utf-8";
+
+@font-face {
+	font-family: Ubuntu;
+	src: url(../font/Ubuntu-M.785d8031.ttf);
+	font-weight: 400;
+	font-style: normal
+}
+body {
+	max-width: 450px;
+	min-height: 100vh;
+	margin: 0 auto;
+	background-color: #2c313b!important;
+	background-image: radial-gradient(50% 50% at 50% 50%,rgba(255,0,0,.1) 10%,hsla(0,0%,100%,0) 100%);
+	background-image: url("../img/background/2.jpg");
+	background-size: cover;
+	background-position: center center;
+}
+input:focus {
+	outline: none;
+}
+
+/* full frame */
+.div_full {
+	padding: 0 10px;
+	color: #fff;
+	font-size: 12px;
+	font-family: Ubuntu,Roboto,sans-serif;
+	min-height: 100vh;
+}
+.div_title {
+	font-size: 1rem;
+	height: 2.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.div_title span {
+	color: red;
+}
+.div_tabs {
+	border-bottom: 1px solid rgba(0,0,0,.1);
+	margin-bottom: 10px;
+}
+.div_tabs nav {
+	padding: .5rem 1rem;
+	display: flex; 
+	justify-content: space-between;
+}
+.div_tabs div {
+	display: flex;
+	flex-direction: row!important;
+}
+.div_tabs a {
+	padding: .5rem .2rem;
+	color: #6c7284!important;
+	font-size: 17px;
+	margin-left: 10px;
+	text-decoration: none;
+}
+.div_tabs a.active {
+	color: #fff!important;
+}
+.div_main {
+	background: rgba(33,36,41,.5);
+	border-radius: 20px;
+}
+
+/* main frame */
+.div_content {
+	margin-top: .1rem;
+	background-color: #212429;
+	border-radius: 20px;
+	display: flex;
+	flex-direction: column;
+	padding: .4rem 0;
+}
+.div_content label {
+	margin: .4rem 14px 10px 14px;
+	font-size: 14px;
+	font-weight: 600;
+}

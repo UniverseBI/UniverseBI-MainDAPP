@@ -38,10 +38,6 @@ contract FarmPlus is Ownable, ReentrancyGuard {
     
     // 每个区块开采奖励的币数.
     uint rewardPerBlock = 1 * (10 ** 18);
-    // 每用户质押限额（0-无限额）
-    uint poolLimitPerUser;
-    // 每用户辅助币质押限额（0-无限额）
-    uint plusLimitPerUser;
     
     
     
@@ -82,8 +78,6 @@ contract FarmPlus is Ownable, ReentrancyGuard {
     event Deposit(address indexed user, uint amount, bool _isPlus);
     event Withdraw(address indexed user, uint amount, bool _isPlus);
     event AdminTokenRecovery(address tokenRecovered, uint amount);
-    event NewPoolLimit(uint poolLimitPerUser);
-    event NewPlusLimit(uint plusLimitPerUser);
     event NewRewardPerBlock(uint rewardPerBlock);
     
     
@@ -130,11 +124,6 @@ contract FarmPlus is Ownable, ReentrancyGuard {
         }
         User storage user = users[msg.sender];
         require(user.activated || users[_ref].activated, "Referrer is not activated");
-        if (_isPlus) {
-            require(amount == 0 || plusLimitPerUser == 0 || amount.add(user.powerPlusAmount) <= plusLimitPerUser, "User deposit amount above limit");
-        } else {
-            require(amount == 0 || poolLimitPerUser == 0 || amount.add(user.amount) <= poolLimitPerUser, "User deposit amount above limit");
-        }
         
         // 更新奖池，结算，更新质押数、质押总数、总份额、负债
         updatePool();
@@ -255,7 +244,7 @@ contract FarmPlus is Ownable, ReentrancyGuard {
     }
 
     // 统计与池信息、配置
-    function query_summary() external view returns(uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint) {
+    function query_summary() external view returns(uint, uint, uint, uint, uint, uint, uint, uint, uint) {
         return (totalUsers, 
                 totalAmount, 
                 totalPlusTokenAmount,
@@ -263,8 +252,6 @@ contract FarmPlus is Ownable, ReentrancyGuard {
                 lastRewardBlock, 
                 accruedTokenPerShare,
                 rewardPerBlock,
-                poolLimitPerUser,
-                plusLimitPerUser,
                 query_minable(),
                 block.number);
     }
@@ -281,18 +268,6 @@ contract FarmPlus is Ownable, ReentrancyGuard {
         emit AdminTokenRecovery(_tokenAddress, _tokenAmount);
     }
     
-    // 更新每用户质押限额
-    function updatePoolLimitPerUser(uint _poolLimitPerUser) external onlyOwner {
-        poolLimitPerUser = _poolLimitPerUser;
-        emit NewPoolLimit(_poolLimitPerUser);
-    }
-    
-    // 更新每用户辅助币质押限额
-    function updatePlusLimitPerUser(uint _plusLimitPerUser) external onlyOwner {
-        plusLimitPerUser = _plusLimitPerUser;
-        emit NewPlusLimit(_plusLimitPerUser);
-    }
-
     // 更新每区块奖励数
     function updateRewardPerBlock(uint _rewardPerBlock) external onlyOwner {
         rewardPerBlock = _rewardPerBlock;

@@ -16,7 +16,7 @@ contract Farm is Ownable, ReentrancyGuard {
     /* ******************* 写死 ****************** */
     
     // 精度因子
-    uint PRECISION_FACTOR;
+    uint public PRECISION_FACTOR;
     // 推荐奖励率
     uint public refRewardRate;
     // 质押代币
@@ -24,9 +24,9 @@ contract Farm is Ownable, ReentrancyGuard {
     // 奖励代币
     ERC20 public rewardToken;
     // 质押币是否为ERC20币
-    bool isStakedERC20;
+    bool public isStakedERC20;
     // 奖励币是否为ERC20币
-    bool isRewardERC20;
+    bool public isRewardERC20;
     
 
     
@@ -34,8 +34,6 @@ contract Farm is Ownable, ReentrancyGuard {
     
     // 每个区块开采奖励的币数.
     uint rewardPerBlock = 1 * (10 ** 18);
-    // 每用户质押限额（0-无限额）
-    uint poolLimitPerUser;
     
     
     
@@ -72,7 +70,6 @@ contract Farm is Ownable, ReentrancyGuard {
     event Deposit(address indexed user, uint amount);
     event Withdraw(address indexed user, uint amount);
     event AdminTokenRecovery(address tokenRecovered, uint amount);
-    event NewPoolLimit(uint poolLimitPerUser);
     event NewRewardPerBlock(uint rewardPerBlock);
     
     
@@ -116,9 +113,6 @@ contract Farm is Ownable, ReentrancyGuard {
         }
         User storage user = users[msg.sender];
         require(user.activated || users[_ref].activated, "Referrer is not activated");
-        if (poolLimitPerUser > 0 && amount > 0) {
-            require(amount.add(user.amount) <= poolLimitPerUser, "User deposit amount above limit");
-        }
         
         // 更新池、结算、更新用户份额与负债、总份额统计
         updatePool();
@@ -219,14 +213,13 @@ contract Farm is Ownable, ReentrancyGuard {
     }
 
     // 统计与池信息、配置
-    function query_summary() external view returns(uint, uint, uint, uint, uint, uint, uint, uint, uint) {
+    function query_summary() external view returns(uint, uint, uint, uint, uint, uint, uint, uint) {
         return (totalUsers, 
                 totalAmount, 
                 totalShares, 
                 lastRewardBlock, 
                 accruedTokenPerShare,
                 rewardPerBlock,
-                poolLimitPerUser,
                 query_minable(),
                 block.number);
     }
@@ -243,12 +236,6 @@ contract Farm is Ownable, ReentrancyGuard {
         emit AdminTokenRecovery(_tokenAddress, _tokenAmount);
     }
     
-    // 更新每用户质押限额
-    function updatePoolLimitPerUser(uint _poolLimitPerUser) external onlyOwner {
-        poolLimitPerUser = _poolLimitPerUser;
-        emit NewPoolLimit(_poolLimitPerUser);
-    }
-
     // 更新每区块奖励数
     function updateRewardPerBlock(uint _rewardPerBlock) external onlyOwner {
         rewardPerBlock = _rewardPerBlock;
@@ -264,13 +251,7 @@ contract Farm is Ownable, ReentrancyGuard {
         if (user.shares > 0) {
             uint pending = user.shares.mul(accruedTokenPerShare).div(PRECISION_FACTOR).sub(user.rewardDebt);    // 结算数量 = 净资产 = 资产 - 负债
             uint subPending;                                                                                    // 少结算数量（因余额不足）
-            if (pending > 0) {
-                uint minable = query_minable();
-                if (minable < pending) {
-                    subPending = pending.sub(minable);
-                    pending = minable;
-                }
-            }
+            (pending, subPending) = realPending(pending);
             if (pending > 0) {
                 if (isRewardERC20) {
                     rewardToken.transfer(userAddr, pending);
@@ -313,22 +294,28 @@ contract Farm is Ownable, ReentrancyGuard {
         if (totalShares <= 0) return 0;                         // 无人质押
         if (block.number <= lastRewardBlock) {                  // 未出新块
             uint pending = user.shares.mul(accruedTokenPerShare).div(PRECISION_FACTOR).sub(user.rewardDebt);
-            return realPending(pending);
+            (pending, ) = realPending(pending);
+            return pending;
         }
         uint multiplier = block.number.sub(lastRewardBlock);    // 出块总数
         uint reward = multiplier.mul(rewardPerBlock);           // 出块总奖励
         uint adjustedTokenPerShare = accruedTokenPerShare.add(reward.mul(PRECISION_FACTOR).div(totalShares));
         uint pending2 = user.shares.mul(adjustedTokenPerShare).div(PRECISION_FACTOR).sub(user.rewardDebt);
-        return realPending(pending2);
+        (pending2, ) = realPending(pending2);
+        return pending2;
     }
     
     // 实际可挖
-    function realPending(uint pending) private view returns (uint) {
+    function realPending(uint pending) private view returns (uint, uint) {
+        uint subPending;
         if (pending > 0) {
             uint minable = query_minable();
-            if (minable < pending) pending = minable;
+            if (minable < pending) {
+                subPending = pending.sub(minable);
+                pending = minable;
+            }
         }
-        return pending;
+        return (pending, subPending);
     }
     
     // 更新池
