@@ -8,6 +8,10 @@ $(function () {
 				"0x": {name: "ETH"},
 				"0xdac17f958d2ee523a2206206994597c13d831ec7": {name: "USDT", unit: "Mwei"}
 			}},
+			"128": {name: "HECO Chain", coins: {
+				"0x": {name: "HT"},
+				"0x40280E26A572745B1152A54D1D44F365DaA51618": {name: "DOGE", unit: "Mwei"}
+			}},
 			"188": {name: "Universe BI", coins: {
 				"0x": {name: "BI"},
 				"0x75CF02680c90FF4069fC2c2dA86ead4416F0e18f": {name: "DOGX"},
@@ -18,6 +22,10 @@ $(function () {
 		pairs : [
 			[
 				{chain: "-3", coin: "0x"},
+				{chain: "188", coin: "0xed216d044B969Fba124f3fbFaa28eAFcD4f865e4"}
+			],
+			[
+				{chain: "128", coin: "0x40280E26A572745B1152A54D1D44F365DaA51618"},
 				{chain: "188", coin: "0xed216d044B969Fba124f3fbFaa28eAFcD4f865e4"}
 			],
 			[
