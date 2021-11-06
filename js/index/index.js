@@ -139,9 +139,7 @@ $(function () {
 		$.connectWallet(Number($.config.from.chain), $.config.chains[$.config.from.chain].name, function() {
 			$.inputFromAddrUpdate($.walletAddress);
 			$.bindSubmitEvent($.transfer);
-		}, function() {
-			$.bindQrcodeWindow();
-		}, 3000, "please transfer by scanning QR code");
+		}, $.bindQrcodeWindow, 3000, "please transfer by scanning QR code");
 	} else {
 		$.tips("The current chain only supports transfer by scanning QR code", 3000);
 		$.bindQrcodeWindow();

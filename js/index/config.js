@@ -1,14 +1,6 @@
 $(function () {
 	$.config = {
 		chains : {
-			"1000": {name: "Universe BI", coins: {
-				"0x": {name: "BI"},
-				"0xd3E8E3f2D688773474475275c287bff41a0e7085": {name: "DOGEX"},
-				"0x6Bf654F5873AAeCaee75e328B7977c256D906829": {name: "SDOG"},
-				"0x45328dB9cf9ece8Cc2418D295A38872fee5D7Dfb": {name: "0xDOG"},
-				"0x834178C4e237755F5d9064a31E7eaf7ab4174cFf": {name: "USDT"},
-				"0xF58FD25968e19F203Cf41231835FDA0e95Fa635D": {name: "LBI"}
-			}},
 			"-3": {name: "Doge Blockchain", coins: {
 				"0x": {name: "DOGE"}
 			}},
@@ -16,41 +8,22 @@ $(function () {
 				"0x": {name: "ETH"},
 				"0xdac17f958d2ee523a2206206994597c13d831ec7": {name: "USDT", unit: "Mwei"}
 			}},
-			"56": {name: "Smart Chain", coins: {
-				"0x": {name: "BNB"},
-				"0xba2ae424d960c26247dd6c32edc70b295c744c43": {name: "DOGE", decimals: 8},
-				"0x55d398326f99059ff775485246999027b3197955": {name: "USDT"}
-			}},
-			"518": {name: "Dogethereum OB", coins: {
+			"188": {name: "Universe BI", coins: {
 				"0x": {name: "BI"},
-				"0x3C8a7B3e97060Ad50E257ae2d27576bF53D9e10C": {name: "DOGE"},
-				"0x7d8f299A092fccFa0876E511786262c42a423598": {name: "USDT"},
-				"0xBd90EfDf4c5543bc9be1033F84e1162E40F61365": {name: "SDOG"},
-				"0x3e5fb1db43139d6bc086d3275038d249ead3c23d": {name: "LBI"}
+				"0x75CF02680c90FF4069fC2c2dA86ead4416F0e18f": {name: "DOGX"},
+				"0xed216d044B969Fba124f3fbFaa28eAFcD4f865e4": {name: "0xDOG"},
+				"0xFAeCCAe83A0eb7266C6B87070bf2ad4EcDc1Fc0e": {name: "USDT"},
 			}}
 		},
 		pairs : [
-			[	// 518 BI : 1000 BI
-				{chain: "518", coin: "0x"},
-				{chain: "1000", coin: "0x"}
-			], 
-			[	// 518 DOGE : 1000 DOGE
-				{chain: "518", coin: "0x3C8a7B3e97060Ad50E257ae2d27576bF53D9e10C"},
-				{chain: "1000", coin: "0x45328dB9cf9ece8Cc2418D295A38872fee5D7Dfb"}
-			], 
-			[	// 518 LBI : 1000 LBI
-				{chain: "518", coin: "0x3e5fb1db43139d6bc086d3275038d249ead3c23d"},
-				{chain: "1000", coin: "0xF58FD25968e19F203Cf41231835FDA0e95Fa635D"}
-			], 
-			[	// 518 SDOG : 1000 DOGEX
-			    {chain: "518", coin: "0xBd90EfDf4c5543bc9be1033F84e1162E40F61365"},
-				{chain: "1000", coin: "0xd3E8E3f2D688773474475275c287bff41a0e7085"}
-
-			], 
-			[	// 1000 SDOG : 1000 DOGEX
-				{chain: "1000", coin: "0xd3E8E3f2D688773474475275c287bff41a0e7085"},
-				{chain: "1000", coin: "0x6Bf654F5873AAeCaee75e328B7977c256D906829"}
-			]
+			[
+				{chain: "-3", coin: "0x"},
+				{chain: "188", coin: "0xed216d044B969Fba124f3fbFaa28eAFcD4f865e4"}
+			],
+			[
+				{chain: "1", coin: "0xdac17f958d2ee523a2206206994597c13d831ec7"},
+				{chain: "188", coin: "0xFAeCCAe83A0eb7266C6B87070bf2ad4EcDc1Fc0e"}
+			] 
 		]
 	};
 	

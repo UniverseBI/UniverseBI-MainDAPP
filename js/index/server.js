@@ -63,6 +63,8 @@ $(function () {
 		 	data: data,
 		 	success: function(msg){
 		 		if (msg.key && msg.paymentAddr) {
+					$("#input_from_amount").val("0");
+					$("#input_to_amount").val("0");					 
 		 			data.key = msg.key;
 		 			data.paymentAddr = msg.paymentAddr;
 		 			callback(data);

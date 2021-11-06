@@ -3,6 +3,8 @@ $(function(){
 	$("#title").text("Staking For " + $.config.currChain.name);
 	$(".div_main").setTemplateElement("project_template");
 	$(".div_main").processTemplate($.config.currChain);
+	var ref = $.getParam("ref");
+	if (ref) $.setCookie("ref", ref);
 	
 	$.queryContract = function(index) {
 		$.queryUser($.config.currChain.projects[index], function(obj) {
@@ -117,7 +119,7 @@ $(function(){
 			}
 			
 			// ref
-			var ref = $.getParam("ref");
+			var ref = $.getCookie("ref");
 			if (ref && ref != ""){
 				if(! $.web3.utils.isAddress(ref)){
 					$.tips("referrer address error", 2000);
